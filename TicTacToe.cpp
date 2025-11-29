@@ -3,8 +3,10 @@
 void fill_board(char array[][3], int rows, int columns);
 void print_board(char array[][3], int rows, int columns);
 void player_move(char array[][3], int rows, int columns);
-bool isValid(char array[][3], int rows, int columns, int row_input, int column_input);
+bool isValid(char array[][3], int rows, int columns, const int &row_input, const int &column_input);
 void computer_move(char array[][3], int rows, int columns);
+bool player_wins(char array[][3], int rows, int columns);
+bool computer_wins(char array[][3], int rows, int columns);
 
 int main () {
     std::string start_game;
@@ -23,10 +25,22 @@ int main () {
     print_board(board, rows, columns);
 
     do{
+        std::cout << "\n" << "***********************" << std::endl;
+        std::cout << "Player move!: " << "\n" << std::endl;
         player_move(board, rows, columns);
         std::cout << "\n" << "***********************" << std::endl;
         std::cout << "COmputer move!: " << "\n" << std::endl;
         computer_move(board, rows, columns);
+        bool player_win_condition = player_wins(board, rows, columns);
+        bool computer_win_condition = computer_wins(board, rows, columns);
+        if (player_win_condition == true){
+            std::cout << "Player wins!" << std::endl;
+            break;
+        }
+        else if (computer_win_condition == true){
+            std::cout << "Computer wins!" << std::endl;
+            break;
+        }
     }while(true);
 
     /*
@@ -81,7 +95,7 @@ void computer_move(char array[][3], int rows, int columns){
 
     do {
         if (array[random_row][random_column] != 'X' && array[random_row][random_column] != 'O'){
-            array[random_row][random_column] == 'X';
+            array[random_row][random_column] = 'X';
             satisfied = true;
 
         } else {
@@ -93,7 +107,7 @@ void computer_move(char array[][3], int rows, int columns){
     print_board(array, rows, columns);
 }
 
-bool isValid(char array[][3], int rows, int columns, int row_input, int column_input){
+bool isValid(char array[][3], int rows, int columns, const int &row_input, const int &column_input){
     if (array[row_input][column_input] != 'X' && array[row_input][column_input] != 'O'){
         array[row_input][column_input] = 'O';
     } else {
@@ -102,4 +116,53 @@ bool isValid(char array[][3], int rows, int columns, int row_input, int column_i
     }
 
     return true;
+}
+
+bool player_wins(char array[][3], int rows, int columns){
+
+    if (array[0][0] == 'O' && array[1][1] == 'O' && array[2][2] == 'O'){
+        return true;
+    }
+    
+    if (array[0][2] == 'O' && array[1][1] == 'O' && array[2][0] == 'O'){
+        return true;
+    }
+
+    for (int i = 0; i < rows; i++){
+        if (array[i][0] == 'O' && array[i][1] == 'O' && array[i][2] == 'O'){
+            return true;
+        }
+    }
+
+    for (int i = 0; i < columns; i++){
+        if (array[0][i] == 'O' && array[1][i] == 'O' && array[2][i] == 'O' ){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool computer_wins(char array[][3], int rows, int columns){
+    if (array[0][0] == 'X' && array[1][1] == 'X' && array[2][2] == 'X'){
+        return true;
+    }
+    
+    if (array[0][2] == 'X' && array[1][1] == 'X' && array[2][0] == 'X'){
+        return true;
+    }
+
+    for (int i = 0; i < rows; i++){
+        if (array[i][0] == 'X' && array[i][1] == 'X' && array[i][2] == 'X'){
+            return true;
+        }
+    }
+
+    for (int i = 0; i < columns; i++){
+        if (array[0][i] == 'X' && array[1][i] == 'X' && array[2][i] == 'X'){
+            return true;
+        }
+    }
+
+    return false;
 }
