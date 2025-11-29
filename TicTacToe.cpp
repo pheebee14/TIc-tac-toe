@@ -9,6 +9,7 @@ bool player_wins(char array[][3], int rows, int columns);
 bool computer_wins(char array[][3], int rows, int columns);
 
 int main () {
+    srand(0);
     std::string start_game;
     char board[3][3];
     int rows = sizeof(board)/sizeof(board[0]);
@@ -29,7 +30,7 @@ int main () {
         std::cout << "Player move!: " << "\n" << std::endl;
         player_move(board, rows, columns);
         std::cout << "\n" << "***********************" << std::endl;
-        std::cout << "COmputer move!: " << "\n" << std::endl;
+        std::cout << "Computer move!: " << "\n" << std::endl;
         computer_move(board, rows, columns);
         bool player_win_condition = player_wins(board, rows, columns);
         bool computer_win_condition = computer_wins(board, rows, columns);
@@ -81,14 +82,22 @@ void player_move(char array[][3], int rows, int columns){
         std::cin >> column;
     }while(row > rows || column > columns);
 
-    isValid(array, rows, columns, row - 1, column - 1);
+    bool valid = isValid(array, rows, columns, row - 1, column - 1);
+
+    while(valid == false){
+        std::cout << "Invalid!" << std::endl;
+        std::cout << "Your move! Enter row: ";
+        std::cin >> row;
+        std::cout << "Enter column: ";
+        std::cin >> column;
+
+        valid = isValid(array, rows, columns, row - 1, column - 1);
+    }
     print_board(array, rows, columns);
 
 }
 
 void computer_move(char array[][3], int rows, int columns){
-    srand(0);
-
     int random_row = rand() % 3;
     int random_column = rand() % 3;
     bool satisfied = false;
@@ -110,12 +119,10 @@ void computer_move(char array[][3], int rows, int columns){
 bool isValid(char array[][3], int rows, int columns, const int &row_input, const int &column_input){
     if (array[row_input][column_input] != 'X' && array[row_input][column_input] != 'O'){
         array[row_input][column_input] = 'O';
-    } else {
-        std::cout << "Position is already taken!" << std::endl;
-        return false;
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 bool player_wins(char array[][3], int rows, int columns){
